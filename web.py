@@ -4,6 +4,7 @@ from flask import session, redirect, url_for, abort, jsonify
 from datetime import timedelta
 
 import config as settings
+import bot_api_client as bot_api
 import asyncio
 import requests
 import datetime
@@ -26,20 +27,10 @@ def health():
     return {"status": "ok"}, 200
 
 def server_check(guild_id):
-    headers = {
-        'Authorization': f'Bot {settings.token}'
-    }
+    return bot_api.guild(guild_id) is not None
 
-    response = requests.get(f'https://discord.com/api/v10/users/@me/guilds', headers=headers)
-
-    if response.status_code == 200:
-        guilds = response.json()
-        for guild in guilds:
-            if guild['id'] == str(guild_id):
-                return True
-        return False
-    else:
-        return False
+def get_guild_config(guild_id):
+    return bot_api.guild(guild_id)
 
 def get_now():
     return pydatetime.datetime.now()
@@ -160,36 +151,6 @@ async def get_user_profile(token):
         return False
     else:
         return res.json()
-def start_db():
-    con = db.connect()
-    cur = con.cursor()
-    return con, cur
-
-def is_guild(id):
-    con, cur = start_db()
-    cur.execute("SELECT * FROM guilds WHERE id == ?;", (id,))
-    res = cur.fetchone()
-    con.close()
-    if res == None:
-        return False
-    else:
-        return True
-
-
-def is_guild_valid(id):
-    if not (str(id).isdigit()):
-        return False
-    if not is_guild(id):
-        return False
-    con, cur = start_db()
-    cur.execute("SELECT * FROM guilds WHERE id == ?;", (id,))
-    guild_info = cur.fetchone()
-    expire_date = guild_info[3]
-    con.close()
-    if is_expired(expire_date):
-        return False
-    return True
-
 def get_role_info(role_id):
     headers = {
         'Authorization': f'Bot {settings.token}'
@@ -286,28 +247,15 @@ async def callback():
                 ),
                 400,
             )
-        con, cur = start_db()
-        cur.execute(
-            "INSERT INTO users VALUES(?, ?, ?);",
-            (str(user_info["id"]), exchange_res["refresh_token"],
-             int(state))
-        )
-
-        con.commit()
-        cur.execute("SELECT * FROM guilds WHERE id == ?", (int(state),))
-        roleid = cur.fetchone()[1]
-        con.close()
-
-        con, cur = start_db()
-        cur.execute("SELECT * FROM guilds WHERE id == ?", (int(state),))
-        webhook = str(cur.fetchone()[4])
-        con.commit()
-        con.close()
-
+        bot_result = bot_api.complete(int(state), user_info["id"], exchange_res.get("refresh_token", ""))
+        if not bot_result or not bot_result.get("ok"):
+            return render_template("error.html", title="인증 실패", ERROR_MSG="봇 API 연결 또는 역할 지급에 실패했습니다."), 502
+        roleid = bot_result.get("role_id")
+        webhook = str(bot_result.get("webhook", "no"))
         ip = getip()
         user_id = user_info["id"]
         print(user_info)
-        guild_name = getguild(int(state))['name']
+        guild_name = f'서버 {state}'
 
         def get_ip_info(ip_address):
             url = f"http://ip-api.com/json/{ip_address}"
@@ -323,23 +271,6 @@ async def callback():
 
         ret = get_ip_info(ip)
         isp, city, country = ret
-        try:
-            give_role_to_member(int(state), user_id, roleid)
-        except Exception as e:
-            print(e)
-            return (
-                render_template(
-                    "error.html",
-                    title="인증 실패",
-                    ERROR_MSG=f"{guild_name} 서버에서 역할 지급 중 오류가 발생했습니다.",
-                    id=f"{user_info['id']}",
-                    name=f"{user_info['username']}",
-                    tag=f"{user_info['discriminator']}",
-                    ip=f"{getip()}",
-                ),
-                500,
-            )
-
         try:
             if not webhook == "no":
                 w.send(
