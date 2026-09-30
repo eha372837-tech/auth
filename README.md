@@ -1,6 +1,6 @@
 # WSV OAuth 인증 사이트(Render용)
 
-이 폴더는 **Discord OAuth 인증 콜백 웹사이트만** 실행합니다. Discord 봇은 포함하지 않습니다.
+이 폴더는 **Discord 봇 없이도 먼저 띄울 수 있는 독립형 웹사이트**입니다. 기본 홈페이지와 상태 확인 페이지가 바로 표시되며, 나중에 Discord OAuth 환경변수를 추가해 인증 기능을 연결할 수 있습니다.
 
 ## GitHub 업로드
 
@@ -34,9 +34,9 @@ Plan: Free
 
 `render.yaml`을 사용하는 Blueprint 배포라면 해당 값이 자동으로 채워집니다.
 
-## Render 환경변수
+## Render 환경변수 (사이트만 먼저 띄울 때는 생략 가능)
 
-Render 서비스의 Environment에 아래를 입력합니다.
+사이트 화면만 확인할 때는 환경변수를 입력하지 않아도 됩니다. Discord OAuth를 연결할 때만 Render 서비스의 Environment에 아래 값을 입력합니다.
 
 ```text
 DISCORD_BOT_TOKEN=새로_발급한_봇_토큰
@@ -80,9 +80,9 @@ https://auth.wsv.kr/callback
 PUBLIC_BASE_URL=https://auth.wsv.kr
 ```
 
-## 확인 주소
+## 기본 확인 주소
 
-배포 후 아래 주소가 `{"status":"ok"}`를 반환하면 웹 서버가 실행 중입니다.
+배포 후 `/`에서 기본 홈페이지가 보이고, 아래 주소가 `{"status":"ok"}`를 반환하면 웹 서버가 실행 중입니다.
 
 ```text
 https://auth.wsv.kr/health
