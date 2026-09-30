@@ -9,7 +9,7 @@ import os
 # ============================================================
 # Render 웹사이트 설정 — 여기에 직접 입력할 수 있습니다.
 # ============================================================
-DATABASE_URL = "postgresql://postgres:qpqp1010##@@AAA]@db.jcidwpqtyoqjtkzmkdrj.supabase.co:5432/postgres"
+DATABASE_URL = "postgresql://postgres:WsvDb2026Safe123@db.jcidwpqtyoqjtkzmkdrj.supabase.co:5432/postgres"
 DISCORD_BOT_TOKEN = ""
 DISCORD_ADMIN_IDS = ""
 DISCORD_CLIENT_ID = ""
