@@ -10,7 +10,7 @@ ZIP 압축을 풀었을 때 생긴 이 폴더 안의 파일을 GitHub 저장소 
 web.py
 config.py
 w.py
-database.db
+db.py
 requirements.txt
 render.yaml
 .gitignore
@@ -39,6 +39,7 @@ Plan: Free
 사이트 화면만 확인할 때는 환경변수를 입력하지 않아도 됩니다. Discord OAuth를 연결할 때만 Render 서비스의 Environment에 아래 값을 입력합니다.
 
 ```text
+DATABASE_URL=Supabase_Connection_String
 DISCORD_BOT_TOKEN=새로_발급한_봇_토큰
 DISCORD_ADMIN_IDS=관리자_디스코드_ID
 DISCORD_CLIENT_ID=Discord_OAuth2_Client_ID
@@ -92,6 +93,6 @@ https://auth.wsv.kr/health
 
 ## 중요: 현재 DB 구조
 
-이 사이트와 Pterodactyl 봇은 각각 로컬 `database.db`를 사용합니다. Render 무료 서비스의 로컬 파일은 재시작/재배포 시 유지되지 않을 수 있으므로, 이 패키지는 **사이트가 뜨는지 확인하는 테스트용**입니다. 실제 운영에서 봇과 인증 데이터가 공유되어야 하면 SQLite를 공용 PostgreSQL 등으로 변경해야 합니다.
+이 버전은 Supabase PostgreSQL을 사용합니다. Render와 Pterodactyl 양쪽의 `DATABASE_URL`에 같은 Supabase 연결 문자열을 입력하면 라이센스·역할·인증 사용자가 공유됩니다.
 
 토큰과 Client Secret은 GitHub 파일에 절대 입력하지 말고 Render Environment에만 입력하세요.

@@ -6,7 +6,6 @@ from datetime import timedelta
 import config as settings
 import asyncio
 import requests
-import sqlite3
 import datetime
 import http
 import w
@@ -19,10 +18,7 @@ app = Flask(__name__)
 
 @app.get("/")
 def home():
-    return """<!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WSV 인증 사이트</title><style>body{font-family:Arial,sans-serif;background:#f4f6f8;display:grid;place-items:center;min-height:100vh;margin:0;color:#20252b}.card{background:white;max-width:560px;margin:24px;padding:40px;border-radius:16px;box-shadow:0 8px 30px #0001;text-align:center}h1{margin-top:0}p{line-height:1.7;color:#667085}.ok{display:inline-block;background:#e8f7ee;color:#18794e;padding:8px 14px;border-radius:999px;font-size:14px}</style></head>
-<body><main class="card"><span class="ok">사이트 정상 작동 중</span><h1>WSV 인증 사이트</h1><p>인증 페이지가 준비되었습니다.<br>Discord OAuth2 연결 설정 후 인증 패널에서 사용할 수 있습니다.</p></main></body></html>""", 200
+    return """<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WSV 인증 사이트</title><style>body{font-family:Arial,sans-serif;background:#f4f6f8;display:grid;place-items:center;min-height:100vh;margin:0;color:#20252b}.card{background:#fff;max-width:560px;margin:24px;padding:40px;border-radius:16px;box-shadow:0 8px 30px #0001;text-align:center}h1{margin-top:0}p{line-height:1.7;color:#667085}.ok{display:inline-block;background:#e8f7ee;color:#18794e;padding:8px 14px;border-radius:999px;font-size:14px}</style></head><body><main class="card"><span class="ok">사이트 정상 작동 중</span><h1>WSV 인증 사이트</h1><p>인증 페이지가 준비되었습니다.<br>Discord OAuth2 연결 후 인증 패널에서 사용할 수 있습니다.</p></main></body></html>""", 200
 
 
 @app.get("/health")
@@ -165,7 +161,7 @@ async def get_user_profile(token):
     else:
         return res.json()
 def start_db():
-    con = sqlite3.connect("database.db")
+    con = db.connect()
     cur = con.cursor()
     return con, cur
 
