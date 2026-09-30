@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, make_response
 from flask import session, redirect, url_for, abort, jsonify
 from datetime import timedelta
 
-import 설정 as settings
+import config as settings
 import asyncio
 import requests
 import sqlite3

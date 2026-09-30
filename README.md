@@ -8,7 +8,7 @@ ZIP 압축을 풀었을 때 생긴 이 폴더 안의 파일을 GitHub 저장소 
 
 ```text
 web.py
-설정.py
+config.py
 w.py
 database.db
 requirements.txt
