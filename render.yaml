@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: wsv-auth-site
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn web:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: DISCORD_ADMIN_IDS
+        sync: false
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: RECOVERY_LOG_WEBHOOKS
+        sync: false
+      - key: DISCORD_API_ENDPOINT
+        value: https://discord.com/api/v10
